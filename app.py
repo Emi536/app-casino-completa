@@ -29,8 +29,8 @@ def preparar_dataframe(df):
     return df
 
 # SECCIÓN 1: MÉTRICAS DE JUGADORES
-if seccion == "🔝 Métricas de Jugadores":
-    st.header("🔝 Métricas de Jugadores - Monto y Cantidad de Cargas")
+if seccion == "🔝 Métricas de jugadores":
+    st.header("🔝 Métricas de jugadores - monto y cantidad de cargas")
 
     # Filtro para elegir la cantidad de jugadores
     top_n = st.selectbox("Selecciona el número de jugadores a mostrar:", [30, 50, 100, 150, 200], index=0)

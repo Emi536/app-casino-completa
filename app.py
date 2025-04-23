@@ -5,15 +5,15 @@ import datetime
 st.set_page_config(page_title="PlayerMetrics - Análisis de Cargas", layout="wide")
 st.markdown("<h1 style='text-align: center; color:#F44336;'>Player metrics</h1>", unsafe_allow_html=True)
 
-# Establecer la URL de la imagen en GitHub
+# URL de la imagen
 background_image_url = "https://raw.githubusercontent.com/Emi536/app-casino-completa/main/acab4f05-0a6b-4e3b-bfea-7461d6c6ca81.png"
 
-# CSS para añadir la imagen de fondo
+# CSS para establecer la imagen de fondo
 st.markdown(
     f"""
     <style>
     .reportview-container {{
-        background-image: url('{background_image_url}');
+        background-image: url("{background_image_url}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -44,7 +44,6 @@ st.markdown(
     </style>
     """, unsafe_allow_html=True
 )
-
 seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de jugadores", "📋 Registro de actividad de jugadores", "📆 Seguimiento de jugadores inactivos"])
 
 # FUNCIONES AUXILIARES

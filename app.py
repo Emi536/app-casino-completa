@@ -32,7 +32,7 @@ def preparar_dataframe(df):
 if seccion == "🔝 Métricas de jugadores":
     st.header("🔝 Métricas de jugadores - monto y cantidad de cargas")
 
-    # Filtro para elegir la cantidad de jugadores
+        # Filtro para elegir la cantidad de jugadores
     top_n = st.selectbox("Selecciona el número de jugadores a mostrar:", [30, 50, 100, 150, 200], index=0)
 
     archivo = st.file_uploader("📁 Subí tu archivo de cargas recientes:", type=["xlsx", "xls", "csv"], key="top10")
@@ -66,14 +66,13 @@ if seccion == "🔝 Métricas de jugadores":
             top_monto['Última vez que cargó'] = top_monto['Jugador'].apply(lambda x: df_cargas[df_cargas['Jugador'] == x]['Fecha'].max())
             top_cant['Última vez que cargó'] = top_cant['Jugador'].apply(lambda x: df_cargas[df_cargas['Jugador'] == x]['Fecha'].max())
 
-            st.subheader(f"💰 Top {top_n} por monto total cargado")
+            st.subheader(f"💰 Top {top_n} por Monto Total Cargado")
             st.dataframe(top_monto)
 
-            st.subheader(f"🔢 Top {top_n} por cantidad de cargas")
+            st.subheader(f"🔢 Top {top_n} por Cantidad de Cargas")
             st.dataframe(top_cant)
 
             try:
-             try:
                 with pd.ExcelWriter(f"Top{top_n}_Cargas.xlsx", engine="openpyxl") as writer:
                     top_monto.to_excel(writer, sheet_name="Top Monto", index=False)
                     top_cant.to_excel(writer, sheet_name="Top Cantidad", index=False)

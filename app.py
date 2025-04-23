@@ -72,13 +72,17 @@ if seccion == "🔝 Métricas de jugadores":
             st.subheader(f"🔢 Top {top_n} por cantidad de cargas")
             st.dataframe(top_cant)
 
-            writer = pd.ExcelWriter(f"Top{top_n}_Cargas.xlsx", engine="xlsxwriter")
-            top_monto.to_excel(writer, sheet_name="Top Monto", index=False)
-            top_cant.to_excel(writer, sheet_name="Top Cantidad", index=False)
-            writer.close()
+            try:
+                writer = pd.ExcelWriter(f"Top{top_n}_Cargas.xlsx", engine="openpyxl")
+                top_monto.to_excel(writer, sheet_name="Top Monto", index=False)
+                top_cant.to_excel(writer, sheet_name="Top Cantidad", index=False)
+                writer.save()
 
-            with open(f"Top{top_n}_Cargas.xlsx", "rb") as f:
-                st.download_button(f"📥 Descargar Excel - Top {top_n} Cargas", f, file_name=f"Top{top_n}_Cargas.xlsx")
+                with open(f"Top{top_n}_Cargas.xlsx", "rb") as f:
+                    st.download_button(f"📥 Descargar Excel - Top {top_n} Cargas", f, file_name=f"Top{top_n}_Cargas.xlsx")
+            except Exception as e:
+                st.error(f"❌ Ocurrió un error al guardar el archivo: {e}")
+
         else:
             st.error("❌ El archivo no tiene el formato esperado.")
 

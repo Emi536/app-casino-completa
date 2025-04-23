@@ -129,9 +129,6 @@ elif seccion == "📋 Registro":
 
             df_registro = pd.DataFrame(resumen)
 
-            if dias_filtrado > 0:
-                df_registro = df_registro[df_registro["Días inactivo"] >= dias_filtrado]
-
             df_registro = df_registro.sort_values("Días inactivo", ascending=False)
 
             st.subheader("📄 Registro completo de jugadores")

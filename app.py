@@ -66,10 +66,10 @@ if seccion == "🔝 Métricas de jugadores":
             top_monto['Última vez que cargó'] = top_monto['Jugador'].apply(lambda x: df_cargas[df_cargas['Jugador'] == x]['Fecha'].max())
             top_cant['Última vez que cargó'] = top_cant['Jugador'].apply(lambda x: df_cargas[df_cargas['Jugador'] == x]['Fecha'].max())
 
-            st.subheader(f"💰 Top {top_n} por Monto Total Cargado")
+            st.subheader(f"💰 Top {top_n} por monto total cargado")
             st.dataframe(top_monto)
 
-            st.subheader(f"🔢 Top {top_n} por Cantidad de Cargas")
+            st.subheader(f"🔢 Top {top_n} por cantidad de cargas")
             st.dataframe(top_cant)
 
             writer = pd.ExcelWriter(f"Top{top_n}_Cargas.xlsx", engine="xlsxwriter")

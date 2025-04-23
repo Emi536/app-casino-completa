@@ -60,6 +60,10 @@ if seccion == "🔝 Top 10 de Cargas":
                 .reset_index()
             )
 
+            # Obtener la última vez que cargó (Última fecha de carga)
+            top_monto['Última vez que cargó'] = top_monto['Jugador'].apply(lambda x: df_cargas[df_cargas['Jugador'] == x]['Fecha'].max())
+            top_cant['Última vez que cargó'] = top_cant['Jugador'].apply(lambda x: df_cargas[df_cargas['Jugador'] == x]['Fecha'].max())
+
             st.subheader(f"💰 Top {top_n} por Monto Total Cargado")
             st.dataframe(top_monto)
 

@@ -5,45 +5,7 @@ import datetime
 st.set_page_config(page_title="PlayerMetrics - Análisis de Cargas", layout="wide")
 st.markdown("<h1 style='text-align: center; color:#F44336;'>Player metrics</h1>", unsafe_allow_html=True)
 
-# URL de la imagen
-background_image_url = "https://raw.githubusercontent.com/Emi536/app-casino-completa/main/acab4f05-0a6b-4e3b-bfea-7461d6c6ca81.png"
 
-# CSS para establecer la imagen de fondo
-st.markdown(
-    f"""
-    <style>
-    .reportview-container {{
-        background-image: url("{background_image_url}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }}
-    .sidebar .sidebar-content {{
-        background-color: rgba(0, 0, 0, 0.7);  /* Fondo oscuro para la barra lateral */
-    }}
-    .st-bd {{
-        color: #FFFFFF;  /* Texto blanco */
-    }}
-    h1 {{
-        color: #4CAF50;  /* Título principal en verde brillante */
-        text-align: center;
-    }}
-    .st-header {{
-        background-color: #2196F3;  /* Azul para los encabezados */
-    }}
-    .st-dataframe {{
-        background-color: #f8f9fa;  /* Fondo claro para las tablas */
-    }}
-    .st-button {{
-        background-color: #FF9800;  /* Naranja para los botones */
-        color: #FFFFFF;  /* Texto blanco en botones */
-    }}
-    .st-error {{
-        color: #F44336;  /* Rojo para los mensajes de error */
-    }}
-    </style>
-    """, unsafe_allow_html=True
-)
 seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de jugadores", "📋 Registro de actividad de jugadores", "📆 Seguimiento de jugadores inactivos"])
 
 # FUNCIONES AUXILIARES

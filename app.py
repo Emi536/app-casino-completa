@@ -5,55 +5,55 @@ import datetime
 st.set_page_config(page_title="PlayerMetrics - Análisis de Cargas", layout="wide")
 st.markdown("<h1 style='text-align: center; color:#F44336;'>Player metrics</h1>", unsafe_allow_html=True)
 
-# Cargar imagen de fondo
-image_path = "/mnt/data/acab4f05-0a6b-4e3b-bfea-7461d6c6ca81.png"  # Cambia esta línea si tienes una imagen local
-
 # Función para codificar la imagen en base64
 def image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
     return f"data:image/png;base64,{encoded_string}"
 
-# CSS para añadir la imagen de fondo
-background_image = image_to_base64(image_path)
+# Cargar imagen desde el archivo subido
+uploaded_file = st.file_uploader("Sube una imagen de fondo", type=["png", "jpg", "jpeg"])
 
-# Establecer fondo con la imagen
-st.markdown(
-    f"""
-    <style>
-    .reportview-container {{
-        background-image: url('{background_image}');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }}
-    .sidebar .sidebar-content {{
-        background-color: rgba(0, 0, 0, 0.7);  /* Fondo oscuro para la barra lateral */
-    }}
-    .st-bd {{
-        color: #FFFFFF;  /* Texto blanco */
-    }}
-    h1 {{
-        color: #4CAF50;  /* Título principal en verde brillante */
-        text-align: center;
-    }}
-    .st-header {{
-        background-color: #2196F3;  /* Azul para los encabezados */
-    }}
-    .st-dataframe {{
-        background-color: #f8f9fa;  /* Fondo claro para las tablas */
-    }}
-    .st-button {{
-        background-color: #FF9800;  /* Naranja para los botones */
-        color: #FFFFFF;  /* Texto blanco en botones */
-    }}
-    .st-error {{
-        color: #F44336;  /* Rojo para los mensajes de error */
-    }}
-    </style>
-    """, unsafe_allow_html=True
-)
+if uploaded_file is not None:
+    # Convertir la imagen cargada en base64
+    background_image = image_to_base64(uploaded_file)
 
+    # Aplicar la imagen como fondo
+    st.markdown(
+        f"""
+        <style>
+        .reportview-container {{
+            background-image: url('{background_image}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }}
+        .sidebar .sidebar-content {{
+            background-color: rgba(0, 0, 0, 0.7);  /* Fondo oscuro para la barra lateral */
+        }}
+        .st-bd {{
+            color: #FFFFFF;  /* Texto blanco */
+        }}
+        h1 {{
+            color: #4CAF50;  /* Título principal en verde brillante */
+            text-align: center;
+        }}
+        .st-header {{
+            background-color: #2196F3;  /* Azul para los encabezados */
+        }}
+        .st-dataframe {{
+            background-color: #f8f9fa;  /* Fondo claro para las tablas */
+        }}
+        .st-button {{
+            background-color: #FF9800;  /* Naranja para los botones */
+            color: #FFFFFF;  /* Texto blanco en botones */
+        }}
+        .st-error {{
+            color: #F44336;  /* Rojo para los mensajes de error */
+        }}
+        </style>
+        """, unsafe_allow_html=True
+    )
 
 seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de jugadores", "📋 Registro de actividad de jugadores", "📆 Seguimiento de jugadores inactivos"])
 

@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import datetime
@@ -6,7 +5,7 @@ import datetime
 st.set_page_config(page_title="App de Cargas - Casino", layout="wide")
 st.title("🎰 App de Análisis de Cargas del Casino")
 
-seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Top 10 de Cargas", "📉 Jugadores Inactivos", "📋 Registro", "📆 Inactivos Agenda"])
+seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Top 200 de Cargas", "📉 Jugadores Inactivos", "📋 Registro", "📆 Inactivos Agenda"])
 
 # FUNCIONES AUXILIARES
 def preparar_dataframe(df):
@@ -27,10 +26,14 @@ def preparar_dataframe(df):
     })
     return df
 
-# SECCIÓN 1: TOP 10 DE CARGAS
-if seccion == "🔝 Top 10 de Cargas":
-    st.header("🔝 Top 10 por Monto y Cantidad de Cargas")
-    archivo = st.file_uploader("📁 Subí tu archivo de cargas recientes:", type=["xlsx", "xls", "csv"], key="top10")
+# SECCIÓN 1: TOP 200 DE CARGAS
+if seccion == "🔝 Top 200 de Cargas":
+    st.header("🔝 Top 200 por Cargas - Filtrar por Número de Jugadores")
+    
+    archivo = st.file_uploader("📁 Subí tu archivo de cargas recientes:", type=["xlsx", "xls", "csv"], key="top200")
+
+    # Filtro de cuántos jugadores se desean ver
+    filtro_top = st.selectbox("Selecciona cuántos jugadores quieres ver:", [30, 50, 100, 150, 200])
 
     if archivo:
         df = pd.read_excel(archivo) if archivo.name.endswith((".xlsx", ".xls")) else pd.read_csv(archivo)
@@ -41,35 +44,38 @@ if seccion == "🔝 Top 10 de Cargas":
             df["Monto"] = pd.to_numeric(df["Monto"], errors="coerce").fillna(0)
             df_cargas = df[df["Tipo"] == "in"]
 
-            top_monto = (
+            # Calcular el Top 200 por Monto Total Cargado
+            top_200 = (
                 df_cargas.groupby("Jugador")
                 .agg(Monto_Total_Cargado=("Monto", "sum"), Cantidad_Cargas=("Jugador", "count"))
                 .sort_values(by="Monto_Total_Cargado", ascending=False)
-                .head(10)
+                .head(200)
                 .reset_index()
             )
 
+            # Filtrar por el número de jugadores que elige el usuario
+            top_filtrado = top_200.head(filtro_top)
+
+            st.subheader(f"💰 Top {filtro_top} por Monto Total Cargado")
+            st.dataframe(top_filtrado)
+
+            st.subheader(f"🔢 Top {filtro_top} por Cantidad de Cargas")
             top_cant = (
                 df_cargas.groupby("Jugador")
                 .agg(Cantidad_Cargas=("Jugador", "count"), Monto_Total_Cargado=("Monto", "sum"))
                 .sort_values(by="Cantidad_Cargas", ascending=False)
-                .head(10)
+                .head(filtro_top)
                 .reset_index()
             )
-
-            st.subheader("💰 Top 10 por Monto Total Cargado")
-            st.dataframe(top_monto)
-
-            st.subheader("🔢 Top 10 por Cantidad de Cargas")
             st.dataframe(top_cant)
 
-            writer = pd.ExcelWriter("Top10_Cargas.xlsx", engine="xlsxwriter")
-            top_monto.to_excel(writer, sheet_name="Top Monto", index=False)
+            writer = pd.ExcelWriter(f"Top{filtro_top}_Cargas.xlsx", engine="xlsxwriter")
+            top_filtrado.to_excel(writer, sheet_name="Top Monto", index=False)
             top_cant.to_excel(writer, sheet_name="Top Cantidad", index=False)
             writer.close()
 
-            with open("Top10_Cargas.xlsx", "rb") as f:
-                st.download_button("📥 Descargar Excel", f, file_name="Top10_Cargas.xlsx")
+            with open(f"Top{filtro_top}_Cargas.xlsx", "rb") as f:
+                st.download_button(f"📥 Descargar Excel - Top {filtro_top} Cargas", f, file_name=f"Top{filtro_top}_Cargas.xlsx")
         else:
             st.error("❌ El archivo no tiene el formato esperado.")
 

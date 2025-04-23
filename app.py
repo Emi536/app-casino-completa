@@ -6,7 +6,8 @@ st.set_page_config(page_title="PlayerMetrics - Análisis de Cargas", layout="wid
 st.markdown("""
     <h1 style="text-align: center; color: #0073e6;">Player metrics - Análisis de cargas</h1>
 """, unsafe_allow_html=True)
-seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Top 10 de Cargas", "📉 Jugadores Inactivos", "📋 Registro", "📆 Inactivos Agenda"])
+
+seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de Jugadores", "📉 Jugadores Inactivos", "📋 Registro", "📆 Inactivos Agenda"])
 
 # FUNCIONES AUXILIARES
 def preparar_dataframe(df):
@@ -27,9 +28,9 @@ def preparar_dataframe(df):
     })
     return df
 
-# SECCIÓN 1: TOP 10 DE CARGAS
-if seccion == "🔝 Top 10 de Cargas":
-    st.header("🔝 Top por Monto y Cantidad de Cargas")
+# SECCIÓN 1: MÉTRICAS DE JUGADORES
+if seccion == "🔝 Métricas de Jugadores":
+    st.header("🔝 Métricas de Jugadores - Monto y Cantidad de Cargas")
 
     # Filtro para elegir la cantidad de jugadores
     top_n = st.selectbox("Selecciona el número de jugadores a mostrar:", [30, 50, 100, 150, 200], index=0)

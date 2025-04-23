@@ -73,10 +73,10 @@ if seccion == "🔝 Métricas de jugadores":
             st.dataframe(top_cant)
 
             try:
-                writer = pd.ExcelWriter(f"Top{top_n}_Cargas.xlsx", engine="openpyxl")
-                top_monto.to_excel(writer, sheet_name="Top Monto", index=False)
-                top_cant.to_excel(writer, sheet_name="Top Cantidad", index=False)
-                writer.save()
+             try:
+                with pd.ExcelWriter(f"Top{top_n}_Cargas.xlsx", engine="openpyxl") as writer:
+                    top_monto.to_excel(writer, sheet_name="Top Monto", index=False)
+                    top_cant.to_excel(writer, sheet_name="Top Cantidad", index=False)
 
                 with open(f"Top{top_n}_Cargas.xlsx", "rb") as f:
                     st.download_button(f"📥 Descargar Excel - Top {top_n} Cargas", f, file_name=f"Top{top_n}_Cargas.xlsx")

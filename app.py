@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 
 st.set_page_config(page_title="PlayerMetrics - Análisis de Cargas", layout="wide")
-st.markdown("<h1 style='text-align: center; color: #4CAF50;'>Player Metrics</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color:#212121;'>Player metrics</h1>", unsafe_allow_html=True)
 
 
 seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de jugadores", "📋 Registro de actividad de jugadores", "📆 Seguimiento de jugadores inactivos"])

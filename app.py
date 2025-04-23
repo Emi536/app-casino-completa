@@ -7,7 +7,7 @@ st.markdown("""
     <h1 style="text-align: center; color: #0073e6;">Player metrics</h1>
 """, unsafe_allow_html=True)
 
-seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de Jugadores", "📉 Jugadores Inactivos", "📋 Registro", "📆 Inactivos Agenda"])
+seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de jugadores", "📉 Jugadores Inactivos", "📋 Registro", "📆 Inactivos Agenda"])
 
 # FUNCIONES AUXILIARES
 def preparar_dataframe(df):

@@ -89,7 +89,7 @@ if seccion == "🔝 Métricas de jugadores":
 elif seccion == "📋 Registro":
     st.header("📋 Registro General de Jugadores")
     archivo = st.file_uploader("📁 Subí tu archivo de cargas:", type=["xlsx", "xls", "csv"], key="registro")
-    dias_filtrado = st.number_input("📅 Filtrar jugadores inactivos hace al menos X días (opcional):", min_value=0, max_value=365, value=0)
+    
 
     if archivo:
         df = pd.read_excel(archivo) if archivo.name.endswith((".xlsx", ".xls")) else pd.read_csv(archivo)

@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 import datetime
 
-st.set_page_config(page_title="App de Cargas - Casino", layout="wide")
-st.title("🎰 App de Análisis de Cargas del Casino")
-
+st.set_page_config(page_title="PlayerMetrics - Análisis de Cargas", layout="wide")
+st.markdown("""
+    <h1 style="text-align: center; color: #0073e6;">🎰 PlayerMetrics - Análisis de Cargas del Casino</h1>
+""", unsafe_allow_html=True)
 seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Top 10 de Cargas", "📉 Jugadores Inactivos", "📋 Registro", "📆 Inactivos Agenda"])
 
 # FUNCIONES AUXILIARES

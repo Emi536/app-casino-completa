@@ -86,8 +86,8 @@ if seccion == "🔝 Métricas de jugadores":
             st.error("❌ El archivo no tiene el formato esperado.")
 
 # SECCIÓN 2: REGISTRO
-elif seccion == "📋 Registro":
-    st.header("📋 Registro General de Jugadores")
+elif seccion == "📋 Registro de actividad de jugadores":
+    st.header("📋 Registro general de jugadores")
     archivo = st.file_uploader("📁 Subí tu archivo de cargas:", type=["xlsx", "xls", "csv"], key="registro")
     
 

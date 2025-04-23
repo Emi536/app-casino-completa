@@ -7,7 +7,7 @@ st.markdown("""
     <h1 style="text-align: center; color: #0073e6;">Player metrics</h1>
 """, unsafe_allow_html=True)
 
-seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de jugadores", "📋 Registro de actividad de jugadores", "📆 Inactivos Agenda"])
+seccion = st.sidebar.radio("Seleccioná una sección:", ["🔝 Métricas de jugadores", "📋 Registro de actividad de jugadores", "📆 Seguimiento de jugadores inactivos"])
 
 # FUNCIONES AUXILIARES
 def preparar_dataframe(df):
@@ -142,8 +142,8 @@ elif seccion == "📋 Registro de actividad de jugadores":
 
 
 # SECCIÓN 3: INACTIVOS AGENDA
-elif seccion == "📆 Inactivos Agenda":
-    st.header("📆 Agenda de Jugadores Inactivos Detectados")
+elif seccion == "📆 Seguimiento de jugadores inactivos":
+    st.header("📆 Jugadores inactivos detectados")
 
     archivo_agenda = st.file_uploader("📁 Subí tu archivo con dos hojas (Nombre y Reporte General):", type=["xlsx", "xls"], key="agenda")
 

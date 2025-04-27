@@ -157,8 +157,9 @@ elif seccion == "📋 Registro de actividad de jugadores":
 
 
 # SECCIÓN 3: INACTIVOS AGENDA
+# --- SECCIÓN 3: SEGUIMIENTO DE INACTIVOS ---
 elif seccion == "📆 Seguimiento de jugadores inactivos":
-    
+    st.header("📆 Seguimiento de Jugadores Inactivos Mejorado")
     archivo_agenda = st.file_uploader("📁 Subí tu archivo con dos hojas (Nombre y Reporte General):", type=["xlsx", "xls"], key="agenda")
 
     if archivo_agenda:
@@ -194,13 +195,11 @@ elif seccion == "📆 Seguimiento de jugadores inactivos":
                     ultima_carga = cargas["Fecha"].max()
                     veces_que_cargo = len(cargas)
                     suma_de_cargas = cargas["Monto"].sum()
+                    promedio_monto = cargas["Monto"].mean()
                     dias_inactivo = (hoy - ultima_carga).days
                     cantidad_retiro = historial[historial["Tipo"] == "out"]["Retirar"].sum()
 
-                    promedio_monto = cargas["Monto"].mean() if veces_que_cargo > 0 else 0
-
-                    # --- Calcular Score de Riesgo Mejorado ---
-                    riesgo = min(100, (dias_inactivo * 1.5) + (10 / (veces_que_cargo + 1)) + (5000 / (promedio_monto + 1)))
+                    riesgo = min(100, (dias_inactivo * 2) + (10 / (veces_que_cargo + 1)) + (3000 / (promedio_monto + 1)))
                     riesgo = round(riesgo, 2)
 
                     resumen.append({
@@ -217,40 +216,15 @@ elif seccion == "📆 Seguimiento de jugadores inactivos":
 
             if resumen:
                 df_resultado = pd.DataFrame(resumen).sort_values("Riesgo de inactividad", ascending=False)
-
-                # Merge con Sesiones
-                df_hoja1["Nombre_normalizado"] = df_hoja1["Nombre"].astype(str).str.strip().str.lower()
-                df_resultado["Nombre_normalizado"] = df_resultado["Nombre de Usuario"].astype(str).str.strip().str.lower()
-                df_resultado = df_resultado.merge(df_hoja1[["Nombre_normalizado", "Sesiones"]], on="Nombre_normalizado", how="left")
-                df_resultado.drop(columns=["Nombre_normalizado"], inplace=True)
-
-                # --- Visual en Streamlit ---
-                st.subheader("📋 Resumen de Riesgos de Jugadores")
-
-                # Filtro de riesgo
-                riesgo_seleccion = st.selectbox("🎯 Filtrar por riesgo:", ["Todos", "Alto (>=70%)", "Medio (40-70%)", "Bajo (<40%)"])
-
-                if riesgo_seleccion == "Alto (>=70%)":
-                    df_resultado = df_resultado[df_resultado["Riesgo de inactividad"] >= 70]
-                elif riesgo_seleccion == "Medio (40-70%)":
-                    df_resultado = df_resultado[(df_resultado["Riesgo de inactividad"] >= 40) & (df_resultado["Riesgo de inactividad"] < 70)]
-                elif riesgo_seleccion == "Bajo (<40%)":
-                    df_resultado = df_resultado[df_resultado["Riesgo de inactividad"] < 40]
-
-                # Mostrar la tabla
                 st.dataframe(df_resultado)
 
-                # Gráfico de distribución de riesgo
-                st.subheader("📈 Distribución del Score de Riesgo")
+                st.subheader("\ud83d\udcc8 Distribución del Score de Riesgo")
                 fig_riesgo = px.histogram(df_resultado, x="Riesgo de inactividad", nbins=20, title="Distribución de Riesgos")
                 st.plotly_chart(fig_riesgo, use_container_width=True)
 
-                # Exportar
                 df_resultado.to_excel("jugadores_riesgo_inactividad.xlsx", index=False)
                 with open("jugadores_riesgo_inactividad.xlsx", "rb") as f:
-                    st.download_button("📥 Descargar Excel Riesgo Inactividad", f, file_name="jugadores_riesgo_inactividad.xlsx")
-            else:
-                st.warning("⚠️ No se encontraron coincidencias entre ambas hojas.")
+                    st.download_button("\ud83d\udcc5 Descargar Excel Riesgo Inactividad", f, file_name="jugadores_riesgo_inactividad.xlsx")
 
         except Exception as e:
-            st.error(f"❌ Error al procesar el archivo: {e}")
+            st.error(f"\u274c Error al procesar el archivo: {e}")

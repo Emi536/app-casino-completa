@@ -4,6 +4,7 @@ import datetime
 
 st.set_page_config(page_title="PlayerMetrics - Análisis de Cargas", layout="wide")
 st.markdown("<h1 style='text-align: center; color:#F44336;'>Player metrics</h1>", unsafe_allow_html=True)
+st.set_page_config(page_title="Seguimiento de Jugadores Inactivos", layout="wide")
 
 # Establecer la URL de la imagen en GitHub
 background_image_url = "https://raw.githubusercontent.com/Emi536/app-casino-completa/main/acab4f05-0a6b-4e3b-bfea-7461d6c6ca81.png"
@@ -156,78 +157,96 @@ elif seccion == "📋 Registro de actividad de jugadores":
 
 # SECCIÓN 3: INACTIVOS AGENDA
 elif seccion == "📆 Seguimiento de jugadores inactivos":
-    st.header("📆 Jugadores inactivos detectados")
+st.header("📆 Seguimiento de Jugadores Inactivos Mejorado")
 
-    archivo_agenda = st.file_uploader("📁 Subí tu archivo con dos hojas (Nombre y Reporte General):", type=["xlsx", "xls"], key="agenda")
+archivo_agenda = st.file_uploader("📁 Subí tu archivo con dos hojas (Nombre y Reporte General):", type=["xlsx", "xls"], key="agenda_mejorado")
 
-    if archivo_agenda:
-        try:
-            df_hoja1 = pd.read_excel(archivo_agenda, sheet_name=0)
-            df_hoja2 = pd.read_excel(archivo_agenda, sheet_name=1)
+if archivo_agenda:
+    try:
+        df_hoja1 = pd.read_excel(archivo_agenda, sheet_name=0)
+        df_hoja2 = pd.read_excel(archivo_agenda, sheet_name=1)
 
-            df_hoja2 = df_hoja2.rename(columns={
-                "operación": "Tipo",
-                "Depositar": "Monto",
-                "Fecha": "Fecha",
-                "Al usuario": "Jugador"
-            })
+        df_hoja2 = df_hoja2.rename(columns={
+            "operación": "Tipo",
+            "Depositar": "Monto",
+            "Fecha": "Fecha",
+            "Al usuario": "Jugador"
+        })
 
-            df_hoja2["Jugador"] = df_hoja2["Jugador"].astype(str).str.strip().str.lower()
-            df_hoja2["Fecha"] = pd.to_datetime(df_hoja2["Fecha"], errors="coerce")
-            df_hoja2["Monto"] = pd.to_numeric(df_hoja2["Monto"], errors="coerce").fillna(0)
+        df_hoja2["Jugador"] = df_hoja2["Jugador"].astype(str).str.strip().str.lower()
+        df_hoja2["Fecha"] = pd.to_datetime(df_hoja2["Fecha"], errors="coerce")
+        df_hoja2["Monto"] = pd.to_numeric(df_hoja2["Monto"], errors="coerce").fillna(0)
 
-            nombres_hoja1 = df_hoja1["Nombre"].dropna().astype(str).str.strip().str.lower().unique()
-            df_hoja2["Jugador"] = df_hoja2["Jugador"].astype(str).str.strip().str.lower()
-            df_filtrado = df_hoja2[df_hoja2["Jugador"].isin(nombres_hoja1)]
+        nombres_hoja1 = df_hoja1["Nombre"].dropna().astype(str).str.strip().str.lower().unique()
+        df_filtrado = df_hoja2[df_hoja2["Jugador"].isin(nombres_hoja1)]
 
-            resumen = []
-            hoy = pd.to_datetime(datetime.date.today())
+        resumen = []
+        hoy = pd.to_datetime(datetime.date.today())
 
-            for jugador in df_filtrado["Jugador"].dropna().unique():
-                historial = df_filtrado[df_filtrado["Jugador"] == jugador].sort_values("Fecha")
-                cargas = historial[historial["Tipo"] == "in"]
+        for jugador in df_filtrado["Jugador"].dropna().unique():
+            historial = df_filtrado[df_filtrado["Jugador"] == jugador].sort_values("Fecha")
+            cargas = historial[historial["Tipo"] == "in"]
+            retiros = historial[historial["Tipo"] == "out"]
 
-                if not cargas.empty:
-                    fecha_ingreso = cargas["Fecha"].min()
-                    ultima_carga = cargas["Fecha"].max()
-                    veces_que_cargo = len(cargas)
-                    suma_de_cargas = cargas["Monto"].sum()
-                    dias_inactivo = (hoy - ultima_carga).days
+            if not cargas.empty:
+                fecha_ingreso = cargas["Fecha"].min()
+                ultima_carga = cargas["Fecha"].max()
+                veces_que_cargo = len(cargas)
+                suma_de_cargas = cargas["Monto"].sum()
+                cantidad_retiro = retiros["Monto"].sum()
+                dias_inactivo = (hoy - ultima_carga).days
 
-                    resumen.append({
-                        "Nombre de Usuario": jugador,
-                        "Fecha que ingresó": fecha_ingreso,
-                        "Veces que cargó": veces_que_cargo,
-                        "Suma de las cargas": suma_de_cargas,
-                        "Última vez que cargó": ultima_carga,
-                        "Días inactivos": dias_inactivo,
-                        "Cantidad de retiro": historial[historial["Tipo"] == "out"]["Retirar"].sum()
-                    })
+                # Score de riesgo mejorado
+                riesgo = 0
+                if dias_inactivo >= 30:
+                    riesgo += 60
+                elif dias_inactivo >= 20:
+                    riesgo += 40
+                elif dias_inactivo >= 10:
+                    riesgo += 20
+                if veces_que_cargo <= 5:
+                    riesgo += 20
+                if suma_de_cargas / max(veces_que_cargo,1) < 3000:
+                    riesgo += 15
+                riesgo = min(riesgo, 100)
 
-            
-            
-            if resumen:
-                df_resultado = pd.DataFrame(resumen).sort_values("Días inactivos", ascending=False)
+                if riesgo >= 70:
+                    color = "red"
+                    icono = "🔥"
+                elif riesgo >= 40:
+                    color = "yellow"
+                    icono = "🟡"
+                else:
+                    color = "green"
+                    icono = "🟢"
 
-                df_hoja1["Nombre_normalizado"] = df_hoja1["Nombre"].astype(str).str.strip().str.lower()
-                df_hoja1 = df_hoja1[["Nombre_normalizado", "Sesiones"]]
-                df_resultado["Nombre_normalizado"] = df_resultado["Nombre de Usuario"].astype(str).str.strip().str.lower()
-                df_resultado = df_resultado.merge(df_hoja1, on="Nombre_normalizado", how="left")
-                df_resultado.drop(columns=["Nombre_normalizado"], inplace=True)
+                resumen.append({
+                    "Nombre de Usuario": jugador,
+                    "Fecha que ingresó": fecha_ingreso,
+                    "Última carga": ultima_carga,
+                    "Veces que cargó": veces_que_cargo,
+                    "Suma de las cargas": suma_de_cargas,
+                    "Días inactivos": dias_inactivo,
+                    "Cantidad de retiro": cantidad_retiro,
+                    "Score de riesgo": f"{icono} {riesgo}%"
+                })
 
-                sesiones_disponibles = df_resultado["Sesiones"].dropna().unique()
-                sesion_filtrada = st.selectbox("🎯 Filtrar por Sesión (opcional):", options=["Todas"] + sorted(sesiones_disponibles.tolist()))
-                if sesion_filtrada != "Todas":
-                    df_resultado = df_resultado[df_resultado["Sesiones"] == sesion_filtrada]
+        if resumen:
+            df_resultado = pd.DataFrame(resumen).sort_values("Score de riesgo", ascending=False)
 
-                st.subheader("📋 Resumen de Actividad de Jugadores Coincidentes")
-                st.dataframe(df_resultado)
+            df_hoja1["Nombre_normalizado"] = df_hoja1["Nombre"].astype(str).str.strip().str.lower()
+            df_resultado["Nombre_normalizado"] = df_resultado["Nombre de Usuario"].astype(str).str.strip().str.lower()
+            df_resultado = df_resultado.merge(df_hoja1[["Nombre_normalizado", "Sesiones"]], on="Nombre_normalizado", how="left")
+            df_resultado.drop(columns=["Nombre_normalizado"], inplace=True)
 
-                df_resultado.to_excel("agenda_inactivos_resumen.xlsx", index=False)
-                with open("agenda_inactivos_resumen.xlsx", "rb") as f:
-                    st.download_button("📥 Descargar Excel", f, file_name="agenda_inactivos_resumen.xlsx")
-            else:
-                st.warning("No se encontraron coincidencias entre ambas hojas.")
+            st.dataframe(df_resultado)
 
-        except Exception as e:
-            st.error(f"❌ Error al procesar el archivo: {e}")
+            df_resultado.to_excel("seguimiento_inactivos_mejorado.xlsx", index=False)
+            with open("seguimiento_inactivos_mejorado.xlsx", "rb") as f:
+                st.download_button("👅 Descargar Seguimiento Mejorado", f, file_name="seguimiento_inactivos_mejorado.xlsx")
+
+        else:
+            st.warning("No se encontraron coincidencias entre ambas hojas.")
+
+    except Exception as e:
+        st.error(f"❌ Error al procesar el archivo: {e}")

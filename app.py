@@ -157,7 +157,7 @@ elif seccion == "📋 Registro de actividad de jugadores":
 
 # SECCIÓN 3: INACTIVOS AGENDA
 elif seccion == "📆 Seguimiento de jugadores inactivos":
-st.header("📆 Seguimiento de Jugadores Inactivos")
+st.header("📆 Seguimiento de jugadores inactivos")
 
 archivo_agenda = st.file_uploader("📁 Subí tu archivo con dos hojas (Nombre y Reporte General):", type=["xlsx", "xls"], key="agenda_mejorado")
 

@@ -157,8 +157,6 @@ elif seccion == "📋 Registro de actividad de jugadores":
 
 
 # SECCIÓN 3: INACTIVOS AGENDA
-seccion = st.sidebar.radio("Seleccioná una sección:", ["📆 Seguimiento de jugadores inactivos"])
-
 if seccion == "📆 Seguimiento de jugadores inactivos":
     st.header("📆 Seguimiento de Jugadores Inactivos Mejorado")
 

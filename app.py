@@ -50,9 +50,22 @@ if seccion == "🔝 Métricas de jugadores":
     top_n = st.selectbox("Selecciona el número de jugadores a mostrar:", [30, 50, 100, 150, 200], index=0)
 
     archivo = st.file_uploader("📁 Subí tu archivo de cargas recientes:", type=["xlsx", "xls", "csv"], key="top10")
+    try:
+        if archivo.name.endswith(".xlsx"):
+            df = pd.read_excel(archivo, engine="openpyxl")
+        elif archivo.name.endswith(".xls"):
+            df = pd.read_excel(archivo, engine="xlrd")
+        elif archivo.name.endswith(".csv"):
+            df = pd.read_csv(archivo)
+        else:
+            st.error("❌ Formato no soportado. Subí un archivo .xlsx, .xls o .csv.")
+            df = None
+    except Exception as e:
+        st.error(f"❌ No se pudo leer el archivo: {e}")
+        df = None
 
-    if archivo:
-        df = pd.read_excel(archivo) if archivo.name.endswith((".xlsx", ".xls")) else pd.read_csv(archivo)
+    
+  
         df = preparar_dataframe(df)
 
         if df is not None:
